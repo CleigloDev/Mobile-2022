@@ -1,35 +1,33 @@
-import { StyleSheet, Platform } from 'react-native'
+import { StyleSheet, Platform, StatusBar } from 'react-native'
 
 export default StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10,
-    paddingRight: 10
+    backgroundColor: "white",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+  },
+  input: {
+    height: 40,
+    marginBottom: 12,
+    borderWidth: 1,
+    padding: 10
   },
   h1: {
     fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 12
+    fontWeight: 'bold'
   },
   paragraph: {
-    fontSize: 18,
-    marginBottom: 8
+    fontSize: 18
   },
   boldParagraph: {
     fontSize: 18,
-    marginBottom: 8,
     fontWeight: 'bold'
   },
-  debug: {
-    backgroundColor: 'black',
-    color: 'green',
-    width: '100%',
-    padding: 2,
-    marginBottom: 1,
-    fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'Roboto' // only iOS
-  }
-})
-
+  alignCenterRow: {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'},
+  borderBottom: {borderBottomColor: 'black', borderBottomWidth: 1},
+  listHeader: {flex: 1, marginLeft: 10, marginRight: 10, marginTop: 10, zIndex: 2},
+  listContainer: {flex: 5, marginLeft: 10, marginRight: 10, marginTop: 20},
+  detailHeader: {flex: 1, padding: 5},
+  detailContainer: {height: '50%', borderColor: 'black', borderRadius: 5, borderWidth: 1},
+  detailPage: {flex: 1, margin: 10, justifyContent: 'center'}
+});
