@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { FlatList, Text, View, TouchableOpacity, SafeAreaView, TextInput, Button } from "react-native";
+import { FlatList, Text, View, TouchableOpacity, SafeAreaView, TextInput, Button, KeyboardAvoidingView } from "react-native";
 import { fetchUsersPage } from "./services/users";
 import { basic } from "./theme";
 
@@ -11,16 +11,19 @@ import { basic } from "./theme";
     - Strutturare diversamente il file App.js, in maniera tale che importi i vari componenti e non definirli tutti in un unico file
     - Eventualmente ridurre il numero di useState, per evitare eccessivi refresh della pagina, 
       si potrebbe pensare di raggrupparne alcuni in un unico oggetto
-    - Scomporre il più possibile i componenti, in maniera da avere dei componenti riutilizzabili ove necessario ed evitare
+    - Scomporre il più possibile i componenti, in maniera da avere dei componenti riutilizzabili ove necessario
     - Gestione della tastiera per ridurre eventuali problemi durante la ricerca per email
-
+    - Evitare eccessivi refresh/richieste a BE ogni qual volta l'utente digita una lettera, magari utilizzando un componente assestante per l'input
+      di conseguenza refreshando solo internamente il componente e non l'intera interfaccia
+    - Migliorare la resa grafica dell'app(non sono un grand designer)
+    
 */
 
 export default function App() {
   return (
     <SafeAreaView style={basic.safeArea}>
       <StatusBar style="auto" />
-      <Users />
+        <Users />
     </SafeAreaView>
   );
 };
@@ -99,16 +102,17 @@ const Users = () => {
               : null}
             </View>
           </View>
-          <View style={basic.listContainer}>
-            <FlatList
-              data={_defineDataMapping()}
-              renderItem={_renderItemList}
-              keyExtractor={item => item.id}
-              onEndReached={_fetchData}
-              onEndReachedThreshold={0.5}
-              removeClippedSubviews={true}
-            />
-          </View>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"} style={basic.listContainer}>
+              <FlatList
+                data={_defineDataMapping()}
+                renderItem={_renderItemList}
+                keyExtractor={item => item.id}
+                onEndReached={_fetchData}
+                onEndReachedThreshold={0.5}
+                removeClippedSubviews={true}
+              />
+          </KeyboardAvoidingView>
         </>
       : <UserDetail user={user} hideDetail={() => {setUserSelected(null)}}/> }
     </>
@@ -126,7 +130,7 @@ function UserListItem({ user, showDetail }) {
   };
 
   const render = () => (
-    <View style={{paddingTop: 10}}>
+    <View style={basic.listItemContainer}>
       <Text style={basic.paragraph}>Username: {user.username}</Text>
       <Text style={basic.paragraph}>Email: {user.email}</Text>
       <Text style={basic.paragraph}>Metodo di pagamento: {_showDefaultPaymentMethod()}</Text>
